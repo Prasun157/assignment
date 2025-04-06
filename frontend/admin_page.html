@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - IWAS</title>
+    <link rel="stylesheet" href="styleAdmin.css">
+</head>
+<body onload="loadProfileData()">
+
+    <div class="header">        
+        <button>Profile Edit</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="admin-profile">
+        <div class="profile-photo">
+            <span style="text-align:center;">Photo</span>
+        </div>
+        <h2 id="admin_name">Admin Name</h2>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="#employees">Employee Management</a></li>
+            <li><a href="#projects">Project Management</a></li>
+            <li><a href="#projects">Skill-Based Matching</a></li>
+            <li><a href="#leave">Leave Management</a></li>
+            <li><a href="#reports">Reports</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+
+        <section id="employees" class="sectioning">
+            <h2>Employee Management</h2>           
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Skills</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                </tbody>
+            </table>
+            <br>
+            <button onclick="logout()">Add Employee</button>
+        </section>
+
+        <section id="projects"  class="sectioning">
+            <h2>Project Management</h2>
+            <h3>Unassigned Projects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Required Skills</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="Unassigned_ProjectTableBody">
+                </tbody>
+            </table>
+            <br><br>
+            <h3>Assigned Projects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Required Skills</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Assigned Employee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="Assigned_ProjectTableBody">
+                </tbody>
+            </table>
+            <br>
+            <button onclick="AddProject()">Add Project</button>
+            <div id="notification" class="toast">Project Updated Successfully!</div>
+        </section>
+
+        <section id="leave" class="sectioning">
+            <h2>Leave Management</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="leaveTableBody">
+                </tbody>
+            </table>
+        </section>
+
+        <section id="reports" class="sectioning">
+            <h2>Reports --underconstruction--</h2>
+            <div class="report-section">
+                <h3>Employee Assignment Reports</h3>
+                <button onclick="generateAssignmentReport()">Generate Report</button>
+                <div id="assignmentReport"></div>
+            </div>
+            <div class="report-section">
+                <h3>Leave Request Reports</h3>
+                <button onclick="generateLeaveReport()">Generate Report</button>
+                <div id="leaveReport"></div>
+            </div>
+        </section>
+
+        <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
+        <div id="editModal" class="modal">
+            <h3>Edit Employee</h3>
+            <input type="hidden" id="editEmployeeId">            
+            <input type="text" id="editName" placeholder="Enter Name">
+            <input type="text" id="editSkills" placeholder="Enter Skills (comma-separated)">           
+            <p >Admin Rights: </p><input type="checkbox"  id= "editAdmin" >         
+            <button onclick="saveChanges()">Save</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+
+        <div id="editProjectModal" class="modal">
+            <div class="modal-content">
+                <h3>Edit Project</h3>
+                <input type="hidden" id="editProjectId">                
+                <label for="editProjectName">Project Name</label>
+                <input type="text" id="editProjectName" placeholder="Enter project name" required>        
+                <label for="editProjectSkills">Skills Required</label>
+                <input type="text" id="editProjectSkills" placeholder="Enter skills (comma-separated)" required>        
+                <label for="editProjectStartDate">Start Date</label>
+                <input type="date" id="editProjectStartDate" required>        
+                <label for="editProjectEndDate">End Date</label>
+                <input type="date" id="editProjectEndDate" required>        
+                <label for="editProjectBudget">Budget</label>
+                <input type="number" id="editProjectBudget" placeholder="Enter budget amount" required>        
+                <label>Project Status</label>
+                <div id="StatusComplexity" class="status-options">
+                    <label><input type="radio" name="projectStatus" value="ASSIGNED"> Assigned</label>
+                    <label><input type="radio" name="projectStatus" value="UNASSIGNED"> Unassigned</label>
+                    <label><input type="radio" name="projectStatus" value="COMPLETED"> Completed</label>
+                </div>
+        
+                <div class="modal-buttons">
+                    <button onclick="saveProject(0)" class="save-btn">Save</button>
+                    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="allocationModal" class="modal">
+            <div class="modal-content">
+                <h2>Assign Project</h2>
+                <h4>Manual Allocation</h4>
+                <input type="hidden" id="AssignProjectId"> 
+                <label for="options">Choose an option:</label>
+                    <select id="options">                    
+                    </select>
+                <button onclick="Allocation(0)">Manual Allocation</button>
+                <h4>Intelligent Allocation</h4>
+                <i style="color:rgb(122, 123, 123)">Based on Availability and Skills:</i>
+                <br>
+                <p id="suggestion"></p> 
+                <input type="hidden" id="iwasId">            
+                <button onclick="Allocation(1)" class="gradient-button">Intelligent Allocation</button>
+                
+                <button  onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+
+        <div id="addProjectModal" class="modal">
+            <div class="modal-content">
+                <h3>Add new Project</h3>
+                              
+                <label for="addProjectName">Project Name</label>
+                <input type="text" id="addProjectName" placeholder="Enter project name" required>        
+                <label for="addProjectSkills">Skills Required</label>
+                <input type="text" id="addProjectSkills" placeholder="Enter skills (comma-separated)" required>        
+                <label for="addProjectStartDate">Start Date</label>
+                <input type="date" id="addProjectStartDate" required>        
+                <label for="addProjectEndDate">End Date</label>
+                <input type="date" id="addProjectEndDate" required>        
+                <label for="addProjectBudget">Budget</label>
+                <input type="number" id="addProjectBudget" placeholder="Enter budget amount" required>     
+               
+                <div class="modal-buttons">
+                    <button onclick="saveNewProject()" class="save-btn">Save</button>
+                    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <footer>
+        <p><h5 style="color:royalblue">created by Prasun <> click <a href="https://github.com/Prasun157" style="color:rgb(222, 22, 216)">here</a> to check my github</h5></p>
+    </footer>
+
+    <script src="login.js"></script>
+    <script src="adminJS.js"></script>
+
+</body>
+</html>

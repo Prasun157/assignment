@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link rel="stylesheet" href="styleEmployee.css">
+</head>
+<body onload="loadProfileData()">
+
+    <nav>
+        <button onclick="viewHistory()">History</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="main-content">
+        <div class="profile-photo">
+            <span>Profile Photo</span>
+        </div>
+        <div>
+            <h2>
+                <span id="employee_name">Loading ....</span>
+            </h2>
+        </div>
+
+        <div class="skills-section">
+            <h3>Skills</h3>
+            <span id="skills"></span>            
+            <input type="text" id="newSkillInput" placeholder="Enter new skill">
+            <button onclick="AddSkills()">Add New Skill</button>
+        </div>
+
+        <div class="project-section">
+            <h3>Current Project</h3>
+            <div id="currentProject">
+                <p><strong>Project Name:</strong> <span id="projectName"></span></p>
+                <p><strong>Start Date:</strong> <span id="startDate"></span></p>
+                <p><strong>End Date:</strong> <span id="endDate"></span></p>
+                <p><strong>Budget:</strong> $<span id="budget"></span></p>
+                <p><strong>Status:</strong> <span id="status"></span></p>
+            </div>
+            <button id="ProjectComplete" onclick="ProjectCompleted()" class="hidden">Completed</button>
+        </div>
+
+        <div class="leave-section">
+            <h3>Leave Request</h3>
+            <label for="from">From:</label>
+            <input type="date" id="from" name="from">
+            <label for="to">To:</label>
+            <input type="date" id="to" name="to">
+            <label for="reason">Reason:</label>
+            <textarea id="reason" name="reason" rows="4"></textarea>
+            <button onclick="applyLeave()">Submit Leave Request</button>
+            <p id="error-message"></p>
+        </div>
+
+        <div class="leave-status">
+            <h3>Request Status</h3>
+            <p id="leaveStatus"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Created by <strong>Prasun</strong> | <a href="https://github.com/Prasun157">GitHub</a></p>
+    </footer>
+
+    <script src="login.js"></script>
+    <script src="employeeJS.js"></script>
+
+</body>
+</html>
